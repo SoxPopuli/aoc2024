@@ -1,14 +1,6 @@
 use common::{timed, timed_repeated};
 use std::io::Read as _;
 
-fn is_error(diff: i32, last_change: i32) -> bool {
-    const SIGN_WIDTH: usize = i32::BITS as usize - 1;
-
-    diff == 0
-        || diff.abs() > 3
-        || (last_change != i32::MIN && (last_change >> SIGN_WIDTH) != (diff >> SIGN_WIDTH))
-}
-
 fn is_safe_dampened(seq: &[i32]) -> bool {
     if is_safe(seq) {
         true
@@ -23,6 +15,14 @@ fn is_safe_dampened(seq: &[i32]) -> bool {
 
 fn is_safe(seq: &[i32]) -> bool {
     let mut last_change = i32::MIN;
+
+    fn is_error(diff: i32, last_change: i32) -> bool {
+        const SIGN_WIDTH: usize = i32::BITS as usize - 1;
+
+        diff == 0
+            || diff.abs() > 3
+            || (last_change != i32::MIN && (last_change >> SIGN_WIDTH) != (diff >> SIGN_WIDTH))
+    }
 
     for i in 1..seq.len() {
         let diff = seq[i] - seq[i - 1];
