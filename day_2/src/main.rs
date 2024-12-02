@@ -19,9 +19,10 @@ fn is_safe(seq: &[i32]) -> bool {
     fn is_error(diff: i32, last_change: i32) -> bool {
         const SIGN_WIDTH: usize = i32::BITS as usize - 1;
 
-        diff == 0
-            || diff.abs() > 3
-            || (last_change != i32::MIN && (last_change >> SIGN_WIDTH) != (diff >> SIGN_WIDTH))
+        let sign_changed =
+            last_change != i32::MIN && (last_change >> SIGN_WIDTH) != (diff >> SIGN_WIDTH);
+
+        diff == 0 || diff.abs() > 3 || sign_changed
     }
 
     for i in 1..seq.len() {
