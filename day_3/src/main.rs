@@ -171,8 +171,8 @@ fn main() {
     println!("Part 2: {result} in {}μs", time.as_micros());
 }
 
-// Part 1: 174103751 in 1112μs
-// Part 2: 100411201 in 1110μs
+// Part 1: 174103751 in 70μs
+// Part 2: 100411201 in 69μs
 
 #[cfg(test)]
 mod tests {
