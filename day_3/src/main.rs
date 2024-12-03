@@ -34,7 +34,7 @@ fn tokenize_part_1(input: &str) -> Option<Vec<Mul>> {
             loop {
                 match chars.peek() {
                     Some('0'..='9') => {
-                        numbers.push(parse_number(&mut chars)?);
+                        numbers.push(parse_number(&mut chars));
                     }
                     Some(',') => {
                         chars.next();
@@ -80,7 +80,7 @@ fn tokenize_part_2(input: &str) -> Option<Vec<Mul>> {
                 loop {
                     match chars.peek() {
                         Some('0'..='9') => {
-                            numbers.push(parse_number(&mut chars)?);
+                            numbers.push(parse_number(&mut chars));
                         }
                         Some(',') => {
                             chars.next();
@@ -132,11 +132,19 @@ fn tokenize_part_2(input: &str) -> Option<Vec<Mul>> {
     Some(ops)
 }
 
-fn parse_number(iter: &mut Peekable<impl Iterator<Item = char>>) -> Option<i32> {
+fn parse_number(iter: &mut Peekable<impl Iterator<Item = char>>) -> i32 {
+    let mut total = 0;
+
     from_fn(|| iter.by_ref().next_if(|c| c.is_ascii_digit()))
-        .collect::<String>()
-        .parse()
-        .ok()
+        .for_each(|x| {
+            let value = x as u32 - '0' as u32;
+
+            total *= 10;
+
+            total += value;
+        });
+
+    total as i32
 }
 
 fn parse_instructions(ops: &[Mul]) -> i32 {
@@ -163,8 +171,8 @@ fn main() {
     println!("Part 2: {result} in {}μs", time.as_micros());
 }
 
-// Part 1: 174103751 in 1697μs
-// Part 2: 100411201 in 1629μs
+// Part 1: 174103751 in 1112μs
+// Part 2: 100411201 in 1110μs
 
 #[cfg(test)]
 mod tests {
