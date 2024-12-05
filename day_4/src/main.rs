@@ -9,12 +9,6 @@ impl<T> Vec2d<T> for Vec<Vec<T>> {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
-struct Range {
-    start: (usize, usize),
-    end: (usize, usize),
-}
-
 type Array = Vec<Vec<char>>;
 
 fn string_to_array(input: &str) -> Array {
@@ -27,7 +21,7 @@ fn new_pos(x: usize, y: usize, delta_x: isize, delta_y: isize) -> (usize, usize)
     (new_x as usize, new_y as usize)
 }
 
-fn search_all_directions(data: &Array, x: usize, y: usize) -> Vec<Range> {
+fn search_all_directions(data: &Array, x: usize, y: usize) -> i32 {
     let vectors = [
         // Right
         (1, 0),
@@ -47,7 +41,7 @@ fn search_all_directions(data: &Array, x: usize, y: usize) -> Vec<Range> {
         (1, 1),
     ];
 
-    let mut ranges = vec![];
+    let mut count = 0;
 
     for (delta_x, delta_y) in vectors {
         let m_pos = new_pos(x, y, delta_x, delta_y);
@@ -57,32 +51,29 @@ fn search_all_directions(data: &Array, x: usize, y: usize) -> Vec<Range> {
             && data.get(a_pos.0, a_pos.1) == Some(&'A')
             && data.get(s_pos.0, s_pos.1) == Some(&'S')
         {
-            ranges.push(Range {
-                start: (x, y),
-                end: (s_pos.0, s_pos.1),
-            });
+            count += 1;
         }
     }
 
-    ranges
+    count
 }
 
-fn find_matches(data: &Array) -> Vec<Range> {
+fn find_matches(data: &Array) -> i32 {
     let height = data.len();
     let width = data[0].len();
 
-    let mut ranges = vec![];
+    let mut count = 0;
 
     for col in 0..width {
         for row in 0..height {
             if data.get(col, row) == Some(&'X') {
                 let matches = search_all_directions(data, col, row);
-                ranges.extend_from_slice(&matches);
+                count += matches;
             }
         }
     }
 
-    ranges
+    count
 }
 
 fn search_all_directions_2(data: &Array, x: usize, y: usize) -> bool {
@@ -149,14 +140,14 @@ fn main() {
     let array = string_to_array(&input);
 
     let (time, ranges) = timed(|| find_matches(&array));
-    println!("Part 1: {} in {}μs", ranges.len(), time.as_micros());
+    println!("Part 1: {} in {}μs", ranges, time.as_micros());
 
     let (time, matches) = timed(|| find_matches_2(&array));
     println!("Part 2: {matches} in {}μs", time.as_micros());
 }
 
-// Part 1: 2547 in 567μs
-// Part 2: 1939 in 157μs
+// Part 1: 2547 in 430μs
+// Part 2: 1939 in 159μs
 
 #[cfg(test)]
 mod tests {
@@ -179,7 +170,7 @@ mod tests {
         let array = string_to_array(input);
         let matches = find_matches(&array);
 
-        assert_eq!(matches.len(), 18);
+        assert_eq!(matches, 18);
     }
 
     #[test]
