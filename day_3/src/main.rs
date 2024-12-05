@@ -135,14 +135,13 @@ fn tokenize_part_2(input: &str) -> Option<Vec<Mul>> {
 fn parse_number(iter: &mut Peekable<impl Iterator<Item = char>>) -> i32 {
     let mut total = 0;
 
-    from_fn(|| iter.by_ref().next_if(|c| c.is_ascii_digit()))
-        .for_each(|x| {
-            let value = x as u32 - '0' as u32;
+    from_fn(|| iter.by_ref().next_if(|c| c.is_ascii_digit())).for_each(|x| {
+        let value = x as u32 - '0' as u32;
 
-            total *= 10;
+        total *= 10;
 
-            total += value;
-        });
+        total += value;
+    });
 
     total as i32
 }

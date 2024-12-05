@@ -1,4 +1,4 @@
-use std::time::{Duration, Instant};
+use std::{io::Read, time::{Duration, Instant}};
 
 pub fn timed<Ret>(func: impl Fn() -> Ret) -> (Duration, Ret) {
     let start = Instant::now();
@@ -31,6 +31,12 @@ pub fn timed_repeated<Ret>(repeats: u32, func: impl Fn() -> Ret) -> (Duration, R
     });
 
     (rolling_mean(avg), unsafe { res.assume_init() })
+}
+
+pub fn read_stdin() -> String {
+    let mut buf = String::new();
+    std::io::stdin().read_to_string(&mut buf).unwrap();
+    buf
 }
 
 #[cfg(test)]

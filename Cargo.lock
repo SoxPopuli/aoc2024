@@ -23,3 +23,10 @@ version = "0.1.0"
 dependencies = [
  "common",
 ]
+
+[[package]]
+name = "day_4"
+version = "0.1.0"
+dependencies = [
+ "common",
+]
