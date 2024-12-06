@@ -1,8 +1,8 @@
-use std::collections::{ HashSet, HashMap };
+use std::collections::HashSet;
 
-use common::read_stdin;
+use common::{read_stdin, timed};
 
-#[derive(Debug, Clone, Copy, Default)]
+#[derive(Debug, Clone, Copy, Default, Hash, PartialEq, Eq)]
 enum Direction {
     #[default]
     Up,
@@ -44,6 +44,15 @@ impl std::ops::Add for Position {
         }
     }
 }
+impl std::ops::Sub for Position {
+    type Output = Self;
+    fn sub(self, rhs: Self) -> Self::Output {
+        Self {
+            x: self.x - rhs.x,
+            y: self.y - rhs.y,
+        }
+    }
+}
 impl Position {
     fn new(x: isize, y: isize) -> Self {
         Self { x, y }
@@ -57,7 +66,7 @@ impl Position {
     }
 }
 
-#[derive(Debug, Default, Clone)]
+#[derive(Debug, Default, Clone, Hash, PartialEq, Eq)]
 struct Guard {
     position: Position,
     direction: Direction,
@@ -95,6 +104,11 @@ struct Grid {
 impl Grid {
     fn is_obstruction(&self, pos: &Position) -> bool {
         self.obstructions.contains(pos)
+    }
+
+    fn with_obstruction(mut self, obstruction: Position) -> Self {
+        self.obstructions.insert(obstruction);
+        self
     }
 }
 
@@ -137,9 +151,7 @@ fn build_grid(input: &str) -> (Grid, Guard) {
 }
 
 fn get_visited_squares(grid: &Grid, mut guard: Guard) -> HashSet<Position> {
-    let mut visited = HashSet::<_>::from_iter([
-        guard.position
-    ]);
+    let mut visited = HashSet::<_>::from_iter([guard.position]);
 
     while guard.position.is_inside_grid(grid) {
         guard = guard.step(grid);
@@ -151,30 +163,54 @@ fn get_visited_squares(grid: &Grid, mut guard: Guard) -> HashSet<Position> {
     visited
 }
 
-fn is_looping(grid: &Grid, mut guard: Guard) {
-    
+/// Returns if hit max iter
+fn get_in_loop(grid: &Grid, mut guard: Guard) -> bool {
+    let mut visited = HashSet::<_>::from_iter([guard.clone()]);
+
+    while guard.position.is_inside_grid(grid) {
+        guard = guard.step(grid);
+        if visited.contains(&guard) {
+            return true;
+        } else if guard.position.is_inside_grid(grid) {
+            visited.insert(guard.clone());
+        } else {
+            break;
+        }
+    }
+
+    false
 }
 
-fn part2(grid: &Grid, mut guard: Guard) {
-    // Run part1 to get visited squares
-    let visited = get_visited_squares(grid, guard.clone());
-    // Limit obstruction placement to in front of visited squares
-    // (No point in obstructing a square they never visit)
+fn create_loops(grid: &Grid, guard: Guard) -> i32 {
+    let mut loops = 0;
 
-    // Place new obstructions for each direction per visited square
+    for x in 0..grid.width {
+        for y in 0..grid.height {
+            let new_grid = grid.clone().with_obstruction(Position { x, y });
+
+            if get_in_loop(&new_grid, guard.clone()) {
+                loops += 1;
+            }
+        }
+    }
+
+    loops
 }
 
 fn main() {
     let input = read_stdin();
     let (grid, guard) = build_grid(&input);
 
-    let visited = get_visited_squares(&grid, guard.clone());
-    println!("Part 1: {}", visited.len());
+    let (time, visited) = timed(|| get_visited_squares(&grid, guard.clone()));
+    println!("Part 1: {} in {}μs", visited.len(), time.as_micros());
+
+    let (time, loops) = timed(|| create_loops(&grid, guard.clone()));
+    println!("Part 2: {loops} in {}s", time.as_secs());
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::{build_grid, get_visited_squares, Position};
+    use crate::*;
 
     #[test]
     fn part1() {
@@ -190,5 +226,13 @@ mod tests {
         let visited = get_visited_squares(&grid, guard);
 
         assert_eq!(visited.len(), 41);
+    }
+
+    #[test]
+    fn part2() {
+        let (grid, guard) = build_grid(include_str!("../example.txt"));
+
+        let loops = create_loops(&grid, guard);
+        assert_eq!(loops, 6);
     }
 }
