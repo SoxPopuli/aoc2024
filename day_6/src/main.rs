@@ -63,9 +63,9 @@ struct Guard {
     direction: Direction,
 }
 impl Guard {
-    fn step(&mut self, grid: &Grid) -> Position {
-        let vector = self.direction.vector();
-        let mut next_pos = self.position + vector;
+    fn step(&self, grid: &Grid) -> Guard {
+        let mut direction = self.direction;
+        let mut next_pos = self.position + direction.vector();
         let mut loop_count = 0;
 
         while grid.is_obstruction(&next_pos) {
@@ -73,15 +73,16 @@ impl Guard {
                 panic!("Infinite loop?");
             }
 
-            self.direction = self.direction.rotate();
-            next_pos = self.position + self.direction.vector();
+            direction = direction.rotate();
+            next_pos = self.position + direction.vector();
 
             loop_count += 1;
         }
 
-        self.position = next_pos;
-
-        next_pos
+        Guard {
+            position: next_pos,
+            direction,
+        }
     }
 }
 
@@ -141,9 +142,9 @@ fn get_visited_squares(grid: &Grid, mut guard: Guard) -> HashSet<Position> {
     ]);
 
     while guard.position.is_inside_grid(grid) {
-        let new_pos = guard.step(grid);
-        if new_pos.is_inside_grid(grid) {
-            visited.insert(new_pos);
+        guard = guard.step(grid);
+        if guard.position.is_inside_grid(grid) {
+            visited.insert(guard.position);
         }
     }
 
