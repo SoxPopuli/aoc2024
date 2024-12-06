@@ -208,6 +208,9 @@ fn main() {
     println!("Part 2: {loops} in {}s", time.as_secs());
 }
 
+// Part 1: 5131 in 1231μs
+// Part 2: 1784 in 17s
+
 #[cfg(test)]
 mod tests {
     use crate::*;
