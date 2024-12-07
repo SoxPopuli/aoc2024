@@ -15,8 +15,9 @@ fn can_make(target: i64, numbers: &[i64]) -> bool {
 }
 
 fn concat(a: i64, b: i64) -> i64 {
-    let concat = a.to_string() + &b.to_string();
-    concat.parse().unwrap()
+    let b_places = (b as f64).log10().floor() + 1.0;
+    let a = a * ( 10_i64.pow (b_places as u32));
+    a + b
 }
 
 fn can_make_concat(target: i64, numbers: &[i64]) -> bool {
@@ -71,7 +72,7 @@ fn main() {
 }
 
 // Part 1: 1399219271639 in 913μs
-// Part 2: 275791737999003 in 682ms
+// Part 2: 275791737999003 in 114ms
 
 #[cfg(test)]
 mod tests {
@@ -88,6 +89,12 @@ mod tests {
         assert!(!can_make(161011, &[16, 10, 13]));
 
         assert!(!can_make(83, &[17, 5]));
+    }
+
+    #[test]
+    fn concat_tests() {
+        assert_eq!(concat(15, 3), 153);
+        assert_eq!(concat(1, 300), 1300);
     }
 
     #[test]
