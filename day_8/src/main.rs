@@ -159,7 +159,7 @@ fn main() {
         time.as_micros()
     );
 
-    let (time, with_antinodes_extended) = timed(|| create_antinodes_extended(grid.clone()));
+    let (time, with_antinodes_extended) = timed(|| create_antinodes_extended(grid));
     println!(
         "Part 2: {} in {}μs",
         with_antinodes_extended.antinodes.len(),

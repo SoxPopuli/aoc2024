@@ -1,6 +1,6 @@
 use std::{io::Read, time::{Duration, Instant}};
 
-pub fn timed<Ret>(func: impl Fn() -> Ret) -> (Duration, Ret) {
+pub fn timed<Ret>(func: impl FnOnce() -> Ret) -> (Duration, Ret) {
     let start = Instant::now();
     let res = func();
     let end = Instant::now();
