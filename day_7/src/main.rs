@@ -16,7 +16,7 @@ fn can_make(target: i64, numbers: &[i64]) -> bool {
 
 fn concat(a: i64, b: i64) -> i64 {
     let b_places = (b as f64).log10().floor() + 1.0;
-    let a = a * ( 10_i64.pow (b_places as u32));
+    let a = a * (10_i64.pow(b_places as u32));
     a + b
 }
 
