@@ -1,3 +1,4 @@
+use common::timed;
 use std::collections::HashMap;
 
 fn count_digits(x: u64) -> u64 {
@@ -22,12 +23,12 @@ fn blink(n: u8, stone: u64, memo: &mut Memo) -> u64 {
     } else if let Some(stored) = memo.get(&(n, stone)) {
         *stored
     } else if stone == 0 {
-        blink(n-1, 1, memo)
+        blink(n - 1, 1, memo)
     } else if count_digits(stone) % 2 == 0 {
         let (high, low) = split_number(stone);
-        blink(n-1, high, memo) + blink(n-1, low, memo)
+        blink(n - 1, high, memo) + blink(n - 1, low, memo)
     } else {
-        blink(n-1, stone*2024, memo)
+        blink(n - 1, stone * 2024, memo)
     };
 
     memo.insert((n, stone), num_stones);
@@ -35,9 +36,7 @@ fn blink(n: u8, stone: u64, memo: &mut Memo) -> u64 {
 }
 
 fn blink_multiple(items: &[u64], n: u8, memo: &mut Memo) -> u64 {
-    items.iter().fold(0, |acc, x| {
-        acc + blink(n, *x, memo)
-    })
+    items.iter().fold(0, |acc, x| acc + blink(n, *x, memo))
 }
 
 fn main() {
@@ -48,12 +47,15 @@ fn main() {
 
     let mut memo = Memo::default();
 
-    let stones = blink_multiple(&input, 25, &mut memo);
-    println!("Part 1: {}", stones);
+    let (time, stones) = timed(|| blink_multiple(&input, 25, &mut memo));
+    println!("Part 1: {} in {}ms", stones, time.as_millis());
 
-    let stones = blink_multiple(&input, 75, &mut memo);
-    println!("Part 2: {}", stones);
+    let (time, stones) = timed(|| blink_multiple(&input, 75, &mut memo));
+    println!("Part 2: {} in {}ms", stones, time.as_millis());
 }
+
+// Part 1: 183435 in 1ms
+// Part 2: 218279375708592 in 39ms
 
 #[cfg(test)]
 mod tests {
@@ -72,14 +74,8 @@ mod tests {
 
         let mut memo = Memo::default();
 
-        assert_eq!(
-            blink_multiple(&initial, 6, &mut memo),
-            22
-        );
+        assert_eq!(blink_multiple(&initial, 6, &mut memo), 22);
 
-        assert_eq!(
-            blink_multiple(&initial, 25, &mut memo),
-            55312
-        );
+        assert_eq!(blink_multiple(&initial, 25, &mut memo), 55312);
     }
 }
