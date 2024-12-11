@@ -1,5 +1,3 @@
-#![allow(unused)]
-
 use std::ops::{Add, Sub};
 
 use common::timed;
