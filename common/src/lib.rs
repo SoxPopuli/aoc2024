@@ -1,3 +1,7 @@
+pub mod vectors;
+pub mod pos;
+pub use pos::Pos;
+
 use std::{io::Read, time::{Duration, Instant}};
 
 pub fn timed<Ret>(func: impl FnOnce() -> Ret) -> (Duration, Ret) {
