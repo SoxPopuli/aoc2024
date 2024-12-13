@@ -137,8 +137,8 @@ fn main() {
     println!("Part 2: {tokens} in {}μs", time.as_micros());
 }
 
-// Part 1: 33481 in 21μs
-// Part 2: 92572057880885 in 22μs
+// Part 1: 33481 in 5μs
+// Part 2: 92572057880885 in 2μs
 
 #[cfg(test)]
 mod tests {
