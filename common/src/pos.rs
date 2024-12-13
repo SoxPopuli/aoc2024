@@ -1,5 +1,5 @@
 use std::ops::{
-    Add, Sub
+    Add, Sub, Mul
 };
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -22,6 +22,15 @@ impl Sub for Pos {
         Self {
             x: self.x - rhs.x,
             y: self.y - rhs.y,
+        }
+    }
+}
+impl Mul<isize> for Pos {
+    type Output = Self;
+    fn mul(self, rhs: isize) -> Self::Output {
+        Self {
+            x: self.x * rhs,
+            y: self.y * rhs,
         }
     }
 }
