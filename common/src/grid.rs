@@ -42,6 +42,30 @@ impl<T> Grid<T> {
                 .map(move |(x, c)| (c, (x, y).into()))
         })
     }
+
+    /// Iterates over all valid diagonal directions
+    pub fn iter_adjacent_diagonal(&self, p: Pos) -> impl Iterator<Item = (&'_ T, Pos)> {
+        crate::vectors::DIAGONAL
+            .iter()
+            .map(move |v| p + *v)
+            .filter_map(|p| self.get(&p).map(|x| (x, p)))
+    }
+
+    /// Iterates over all valid cardinal directions
+    pub fn iter_adjacent_cardinal(&self, p: Pos) -> impl Iterator<Item = (&'_ T, Pos)> {
+        crate::vectors::CARDINAL
+            .iter()
+            .map(move |v| p + *v)
+            .filter_map(|p| self.get(&p).map(|x| (x, p)))
+    }
+
+    /// Iterates over all valid directions
+    pub fn iter_adjacent(&self, p: Pos) -> impl Iterator<Item = (&'_ T, Pos)> {
+        crate::vectors::ALL
+            .iter()
+            .map(move |v| p + *v)
+            .filter_map(|p| self.get(&p).map(|x| (x, p)))
+    }
 }
 
 impl<T> Grid<T>

@@ -45,7 +45,7 @@ fn get_area(c: char, pos: &Pos, grid: &Grid, visited: &mut HashSet<Pos>) -> Hash
     visited.insert(*pos);
     area.insert(*pos);
 
-    for vec in vectors::ALL {
+    for vec in vectors::CARDINAL {
         let next = *pos + vec;
         if visited.contains(&next) || is_different(c, &next, grid) {
             continue;
@@ -80,7 +80,7 @@ fn get_perimeter(c: char, patch: &HashSet<Pos>, grid: &Grid) -> u32 {
     let mut perimeter = 0;
 
     for pos in patch {
-        for vec in vectors::ALL {
+        for vec in vectors::CARDINAL {
             let next = *pos + vec;
 
             if is_different(c, &next, grid) {
@@ -142,7 +142,7 @@ fn get_sides(c: char, patch: &HashSet<Pos>, grid: &Grid) -> u32 {
         sides
     }
 
-    vectors::ALL
+    vectors::CARDINAL
         .iter()
         .map(|vec| get_sides_of_direction(c, patch, grid, vec))
         .sum()

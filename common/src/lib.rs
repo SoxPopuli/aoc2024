@@ -1,8 +1,11 @@
 pub mod grid;
-pub use grid::Grid;
+pub mod pipe;
 pub mod pos;
-pub use pos::Pos;
 pub mod vectors;
+
+pub use grid::Grid;
+pub use pipe::{Pipe, Tap};
+pub use pos::Pos;
 
 use std::{
     io::Read,

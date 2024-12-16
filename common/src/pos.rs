@@ -1,9 +1,26 @@
-use std::{fmt::Display, ops::{Add, Mul, Sub}};
+use std::{
+    fmt::Display,
+    ops::{Add, Mul, Sub},
+};
 
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Pos {
     pub x: isize,
     pub y: isize,
+}
+impl Pos {
+    pub const fn new(x: isize, y: isize) -> Self {
+        Pos { x, y }
+    }
+
+    pub fn distance(&self, other: &Self) -> f64 {
+        let delta_x = self.x.abs_diff(other.x);
+        let delta_y = self.y.abs_diff(other.y);
+
+        let squared = (delta_x * delta_x) + (delta_y + delta_y);
+
+        (squared as f64).sqrt()
+    }
 }
 impl Add for Pos {
     type Output = Self;
