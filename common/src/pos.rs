@@ -1,8 +1,6 @@
-use std::ops::{
-    Add, Sub, Mul
-};
+use std::{fmt::Display, ops::{Add, Mul, Sub}};
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Pos {
     pub x: isize,
     pub y: isize,
@@ -40,5 +38,11 @@ impl From<(usize, usize)> for Pos {
             x: x as isize,
             y: y as isize,
         }
+    }
+}
+
+impl Display for Pos {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "[{}, {}]", self.x, self.y)
     }
 }

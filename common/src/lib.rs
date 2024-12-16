@@ -1,8 +1,13 @@
-pub mod vectors;
+pub mod grid;
+pub use grid::Grid;
 pub mod pos;
 pub use pos::Pos;
+pub mod vectors;
 
-use std::{io::Read, time::{Duration, Instant}};
+use std::{
+    io::Read,
+    time::{Duration, Instant},
+};
 
 pub fn timed<Ret>(func: impl FnOnce() -> Ret) -> (Duration, Ret) {
     let start = Instant::now();
@@ -57,5 +62,4 @@ mod tests {
         let (time, _) = timed(long_func_no_args);
         assert_eq!(time.as_secs(), Duration::from_secs(1).as_secs())
     }
-
 }
