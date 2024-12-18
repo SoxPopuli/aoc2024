@@ -1,21 +1,8 @@
-use common::timed;
+use common::{timed, PairsIter};
 use std::{
     fmt::{Display, Write},
-    iter::{from_fn, repeat_n, FromFn},
+    iter::{from_fn, repeat_n},
 };
-
-fn pairs_iter<T>(
-    mut iter: impl Iterator<Item = T>,
-) -> FromFn<impl FnMut() -> Option<(T, Option<T>)>> {
-    from_fn(move || iter.next().map(|a| (a, iter.next())))
-}
-
-trait PairsIter: Iterator + Sized {
-    fn pairs(self) -> FromFn<impl FnMut() -> Option<(Self::Item, Option<Self::Item>)>> {
-        pairs_iter(self)
-    }
-}
-impl<T: Iterator> PairsIter for T {}
 
 #[derive(Debug, Clone)]
 struct ExpandedDiskMap(Vec<Option<u64>>);
