@@ -1,6 +1,4 @@
-#![allow(unused)]
-
-use common::{timed, PairsIter};
+use common::timed;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum Register {
