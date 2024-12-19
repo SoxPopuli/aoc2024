@@ -1,0 +1,8 @@
+[package]
+name = "day_18"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+common = { path = "../common" }
+pathfinding = "4.12.0"

@@ -245,7 +245,7 @@ fn find_output(expected: &[u8]) -> u64 {
             }
         }
 
-        // Doesn't work for first value for some reason
+        // Doesn't work for first value 
         // So brute force last leg
         for i in 0..=1000 {
             let a_val = a + i;
