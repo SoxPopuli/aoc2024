@@ -69,10 +69,29 @@ fn parse_input(input: &str) -> Vec<Pos> {
 }
 
 fn get_first_blocking(mut grid: Grid, incoming: &[Pos]) -> Pos {
+    fn find_path_bfs(grid: &Grid) -> Option<Vec<Pos>> {
+        use pathfinding::directed::bfs::bfs;
+
+        let start = Pos { x: 0, y: 0 };
+        let end = Pos {
+            x: grid.width - 1,
+            y: grid.height - 1,
+        };
+
+        fn successors(grid: &Grid, node: Pos) -> Vec<Pos> {
+            grid.iter_adjacent_cardinal(node)
+                .filter(|(b, _)| matches!(b, Block::Safe))
+                .map(|(_, p)| p)
+                .collect()
+        }
+
+        bfs(&start, |x| successors(grid, *x), |x| *x == end)
+    }
+
     for p in incoming {
         grid[*p] = Block::Corrupted;
 
-        if find_path(&grid).is_none() {
+        if find_path_bfs(&grid).is_none() {
             return *p;
         }
     }
@@ -102,8 +121,8 @@ fn main() {
     );
 }
 
-// Part 1: 308 in 1418μs
-// Part 2: 46,28 in 1072ms
+// Part 1: 308 in 1327μs
+// Part 2: 46,28 in 819ms
 
 fn make_grid(width: usize, height: usize) -> Grid {
     Grid {
