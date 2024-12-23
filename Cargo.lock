@@ -106,6 +106,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "day_20"
+version = "0.1.0"
+dependencies = [
+ "common",
+ "pathfinding",
+]
+
+[[package]]
 name = "day_3"
 version = "0.1.0"
 dependencies = [

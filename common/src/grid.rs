@@ -96,6 +96,28 @@ where
         Ok(())
     }
 }
+impl<T> Grid<T>
+where
+    T: Display,
+{
+    pub fn to_char_grid(&self) -> Grid<char> {
+        let grid = self
+            .data
+            .iter()
+            .map(|row| {
+                row.iter()
+                    .map(|x| x.to_string().chars().next().unwrap())
+                    .collect()
+            })
+            .collect();
+
+        Grid {
+            width: self.width,
+            height: self.height,
+            data: grid,
+        }
+    }
+}
 
 impl<T> Index<Pos> for Grid<T> {
     type Output = T;
