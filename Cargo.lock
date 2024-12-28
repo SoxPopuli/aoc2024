@@ -118,6 +118,7 @@ name = "day_21"
 version = "0.1.0"
 dependencies = [
  "common",
+ "pathfinding",
 ]
 
 [[package]]

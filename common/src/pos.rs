@@ -90,9 +90,13 @@ impl From<(usize, usize)> for Pos {
         }
     }
 }
-
 impl Display for Pos {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "[{}, {}]", self.x, self.y)
+    }
+}
+impl PartialEq<&Self> for Pos {
+    fn eq(&self, other: &&Self) -> bool {
+        self == *other
     }
 }
